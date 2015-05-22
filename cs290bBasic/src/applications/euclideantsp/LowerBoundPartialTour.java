@@ -42,9 +42,9 @@ final public class LowerBoundPartialTour implements LowerBound
         lowerBound = tourDistance( CITIES, partialTour );;
     }
     
-    private LowerBoundPartialTour( final TaskEuclideanTsp parentTask, final Integer newCity )
+//    private LowerBoundPartialTour( final TaskEuclideanTsp parentTask, final Integer newCity )
+    private LowerBoundPartialTour( final List<Integer> partialTour, LowerBound lowerBound, final Integer newCity )
     {
-        List<Integer> partialTour = new ArrayList( parentTask.tour() );
         
         // compute lower bound in O(1) time using parent lower bound
         final Integer oldEndCity = partialTour.get( partialTour.size() - 1 );
@@ -60,6 +60,6 @@ final public class LowerBoundPartialTour implements LowerBound
     @Override
     public LowerBound make( TaskEuclideanTsp parentTask, Integer newCity ) 
     {    
-        return new LowerBoundPartialTour( parentTask, newCity );
+        return new LowerBoundPartialTour( parentTask.tour(), parentTask.lowerBound(), newCity );
     }
 }

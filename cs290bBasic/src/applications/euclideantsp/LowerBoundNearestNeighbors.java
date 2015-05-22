@@ -114,7 +114,8 @@ final public class LowerBoundNearestNeighbors implements LowerBound
     public double cost() { return lowerBound; }
     
     @Override
-    public LowerBound make( TaskEuclideanTsp parentTask, Integer newCity ) 
+//    public LowerBound make( TaskEuclideanTsp parentTask, Integer newCity ) 
+    public LowerBound make( List<Integer> partialTour, List<Integer> unvisitedCities, Integer newCity )
     {
         // make a copy of nearestNeighbors: List<Deque<Integer>>
         final List<Deque<Integer>> copyNearestNeighbors = new ArrayList<>();
@@ -126,7 +127,7 @@ final public class LowerBoundNearestNeighbors implements LowerBound
             copyNearestNeighbors.add( deque );
         }
         // oldCity is the end of the existing path nearestNeighborsList incrementally with newCity
-        final List<Integer> partialTour = parentTask.tour();
+//        final List<Integer> partialTour = parentTask.tour();
         final Integer oldCity = partialTour.get( partialTour.size() - 1 );
         
         // update nearestNeighborsList incrementally: replace old & new path endpoints' virtual edge w/ actual edge
@@ -141,14 +142,18 @@ final public class LowerBoundNearestNeighbors implements LowerBound
                 - (  distance( CITIES[ oldCity ], CITIES[ oldCitysVirtualEndpoint ] )
                    + distance( CITIES[ newCity ], CITIES[ newCitysVirtualEndpoint ] )
                   ) / 2.0;
-        if ( parentTask.unvisitedCities().size() == 1 )
+//        if ( parentTask.unvisitedCities().size() == 1 )
+        if ( unvisitedCities.size() == 1 )
         {
             // tour is complete: make lower bound equal the cost of the tour: tourDistance( CITIES, partialTour );
             assert copyNearestNeighbors.get( 0 ).size() == 1 : copyNearestNeighbors.get( 0 );
-            assert copyNearestNeighbors.get( newCity ).size() == 1 : copyNearestNeighbors.get( newCity ) + " newCity: " + newCity + " oldCity: " + oldCity + " unvisited: " + parentTask.unvisitedCities() + " tour: " + parentTask.tour();
+//            assert copyNearestNeighbors.get( newCity ).size() == 1 : copyNearestNeighbors.get( newCity ) + " newCity: " + newCity + " oldCity: " + oldCity + " unvisited: " + parentTask.unvisitedCities() + " tour: " + parentTask.tour();
             newLowerBound += distance( CITIES[ 0 ], CITIES[ newCity ] ); 
             newLowerBound -= ( distance( CITIES[ 0 ], CITIES[ copyNearestNeighbors.get( 0 ).removeFirst() ] )
-                               + distance( CITIES[ newCity ], CITIES[ copyNearestNeighbors.get( newCity ).removeFirst() ] ) 
+                               + distance( CITIES[ newCity ], 
+                                       CITIES[ 
+                                               copyNearestNeighbors.get( newCity )
+                                                       .removeFirst() ] ) 
                              ) / 2.0;
         }
         return new LowerBoundNearestNeighbors( copyNearestNeighbors, newLowerBound );

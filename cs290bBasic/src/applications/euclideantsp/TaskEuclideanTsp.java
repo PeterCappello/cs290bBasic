@@ -60,7 +60,7 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
 	{ 3, 6 },
 	{ 4, 4 },
 	{ 5, 4 },
-//	{ 5, 5 },
+	{ 5, 5 },
 	{ 4, 5 }
     };
     static final private String FRAME_TITLE = "Euclidean TSP";
@@ -76,7 +76,7 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
     
     static final Integer ONE = 1;
     static final Integer TWO = 2;
-    static final Integer MAX_UNVISITED_CITIES = 12;
+    static final Integer MAX_UNVISITED_CITIES = 13;// 12;
     
     private List<Integer> partialTour;
     private List<Integer> unvisitedCities;
@@ -105,7 +105,8 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
             return;
         }
         partialTour = new ArrayList<>( parentTask.partialTour );
-        lowerBound = parentTask.lowerBound.make( parentTask, newCity );
+//        lowerBound = parentTask.lowerBound.make( parentTask, newCity );
+        lowerBound = parentTask.lowerBound.make( partialTour, parentTask.unvisitedCities, newCity );
         unvisitedCities = new LinkedList<>( parentTask.unvisitedCities ); 
         partialTour.add( newCity );
         unvisitedCities.remove( newCity );
@@ -154,42 +155,47 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
 //    }
     @Override public ReturnValue solve()
     {
-        Tour tour = findMinTour( partialTour, unvisitedCities, lowerBound, partialTourContains1 );
-        SharedTour sharedTour = ( SharedTour ) shared();
-        List<Integer> shortestTour = sharedTour.tour();
-        double shortestTourCost = sharedTour.cost();
-        shared( new SharedTour( shortestTour, shortestTourCost ) );
-        return new ReturnValueTour( this, new Tour( shortestTour, shortestTourCost ) );
+        Tour minTour = findMinTour( partialTour, unvisitedCities, lowerBound, partialTourContains1 );
+//        SharedTour sharedTour = ( SharedTour ) shared();
+//        List<Integer> shortestTour = sharedTour.tour();
+//        double shortestTourCost = sharedTour.cost();
+//        shared( new SharedTour( shortestTour, shortestTourCost ) );
+//        return new ReturnValueTour( this, new Tour( shortestTour, shortestTourCost ) );
+//        System.out.println("minTour.size(): " + minTour.tour().size() );
+        return new ReturnValueTour( this, new Tour( minTour.tour(), minTour.cost() ) );
     }
     
     private Tour findMinTour( List<Integer> partialTour, List<Integer> unvisitedCities, LowerBound lowerBound, boolean partialTourContains1 )
     {
         if ( unvisitedCities.isEmpty() )
         {
+//            System.out.println("unvisitedCities.size(): " + unvisitedCities.size() );
             return new Tour( partialTour, lowerBound.cost() );
         }
+        // !! should do this once, when method is called at top elvel.
         List<Integer> minTour = ( ( SharedTour ) shared() ).tour();
         double minTourCost = ( ( SharedTour ) shared() ).cost();
         for ( int cityIndex = 0; cityIndex < unvisitedCities.size() ; cityIndex++ )
         {
-            if ( partialTourContains1 && unvisitedCities.get( cityIndex ).equals( TWO ) )
+            Integer newCity = unvisitedCities.get( cityIndex );
+            if ( partialTourContains1 && newCity.equals( TWO ) )
             {
                 continue; // prune
             }
-            partialTour.add( unvisitedCities.get( cityIndex ) );
-            Integer removedCity = unvisitedCities.remove( cityIndex );
-            LowerBound newLowerBound = lowerBound.make( this, removedCity );
+            LowerBound newLowerBound = lowerBound.make( partialTour, unvisitedCities, newCity );
             if ( newLowerBound.cost() >= minTourCost )
             {
                 continue; // prune
             }
-            Tour tour = findMinTour( partialTour, unvisitedCities, newLowerBound, partialTourContains1 || removedCity == ONE );
+            partialTour.add( newCity );
+            unvisitedCities.remove( cityIndex );
+            Tour tour = findMinTour( partialTour, unvisitedCities, newLowerBound, partialTourContains1 || newCity == ONE );
             if ( tour.cost() < minTourCost )
             {
-                minTour = tour.tour();
+                minTour = new ArrayList<>( tour.tour() );
                 minTourCost = tour.cost();
             }
-            unvisitedCities.add( cityIndex, removedCity ); // ?? Is this the correct index to use
+            unvisitedCities.add( cityIndex, newCity );
             partialTour.remove( partialTour.size() - 1 );
         }
         return new Tour( minTour, minTourCost );
