@@ -23,7 +23,6 @@
  */
 package applications.euclideantsp;
 
-import java.util.ArrayList;
 import java.util.List;
 import static util.EuclideanGraph.distance;
 import static util.EuclideanGraph.tourDistance;
@@ -42,12 +41,10 @@ final public class LowerBoundPartialTour implements LowerBound
         lowerBound = tourDistance( CITIES, partialTour );;
     }
     
-//    private LowerBoundPartialTour( final TaskEuclideanTsp parentTask, final Integer newCity )
-    private LowerBoundPartialTour( final List<Integer> partialTour, LowerBound lowerBound, final Integer newCity )
+    private LowerBoundPartialTour( final TaskEuclideanTsp parentTask, final Integer newCity )
     {
-        
         // compute lower bound in O(1) time using parent lower bound
-        final Integer oldEndCity = partialTour.get( partialTour.size() - 1 );
+        final Integer oldEndCity = parentTask.tour().get( parentTask.tour().size() - 1 );
         lowerBound = parentTask.lowerBound().cost()
                    - distance( CITIES[ 0 ], CITIES[ oldEndCity ] )
                    + distance( CITIES[ 0 ], CITIES[ newCity ] )
@@ -60,6 +57,6 @@ final public class LowerBoundPartialTour implements LowerBound
     @Override
     public LowerBound make( TaskEuclideanTsp parentTask, Integer newCity ) 
     {    
-        return new LowerBoundPartialTour( parentTask.tour(), parentTask.lowerBound(), newCity );
+        return new LowerBoundPartialTour( parentTask, newCity );
     }
 }

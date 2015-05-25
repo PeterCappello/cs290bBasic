@@ -23,8 +23,6 @@
  */
 package applications.euclideantsp;
 
-import java.util.List;
-
 /**
  *
  * @author Peter Cappello
@@ -33,6 +31,5 @@ public interface LowerBound
 {
     double cost();
     
-//    LowerBound make( TaskEuclideanTsp parentTask, Integer newCity );  
-    LowerBound make( List<Integer> partialTour, List<Integer> unvisitedCities, Integer newCity ); 
+    LowerBound make( TaskEuclideanTsp parentTask, Integer newCity );  
 }
