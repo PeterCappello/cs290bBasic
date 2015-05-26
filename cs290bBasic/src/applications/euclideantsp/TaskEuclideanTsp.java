@@ -29,10 +29,10 @@ import api.ReturnValue;
 import api.Shared;
 import system.Task;
 import api.TaskRecursive;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 import util.EuclideanGraph;
 import static util.EuclideanGraph.tourDistance;
 
@@ -74,9 +74,9 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
         new JobRunner( FRAME_TITLE, args ).run( TASK, SHARED );
     }
     
-    static final Integer ONE = 1;
-    static final Integer TWO = 2;
-    static final Integer MAX_UNVISITED_CITIES = 13;
+    static private final Integer ONE = 1;
+    static private final Integer TWO = 2;
+    static private final Integer MAX_UNVISITED_CITIES = 13;
     
     private List<Integer> partialTour;
     private List<Integer> unvisitedCities;
@@ -130,7 +130,7 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
      */
      @Override public ReturnValue solve() 
     {
-        final Stack<TaskEuclideanTsp> stack = new Stack<>();
+        final Deque<TaskEuclideanTsp> stack = new ArrayDeque<>();
         stack.push( this );
         SharedTour sharedTour = ( SharedTour ) shared();
         List<Integer> shortestTour = sharedTour.tour();
@@ -155,25 +155,8 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
         shared( new SharedTour( shortestTour, shortestTourCost ) );
         return new ReturnValueTour( this, new Tour( shortestTour, shortestTourCost ) );
     }
-    
-    @Override public ReturnDecomposition divideAndConquer() 
-    {
-        final List<Task> children = new  ArrayList<>( unvisitedCities.size() );
-        for ( Integer city : unvisitedCities )
-        {
-            TaskEuclideanTsp child = new TaskEuclideanTsp( this, city, ( ( SharedTour ) shared() ).cost() );
-            if ( ! child.pruneMe )
-            {
-                children.add( child );
-            }
-//            else // update prune statistics
-        }
-        return new ReturnDecomposition( new MinTour(), children );
-    }
-    
-    public LowerBound lowerBound() { return lowerBound; }
-    
-    /**
+     
+     /**
      * Get children whose lower bound is less than the current upper bound.
      * @param upperBound
      * @return 
@@ -193,6 +176,23 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
         return children;
     }
     
+    @Override public ReturnDecomposition divideAndConquer() 
+    {
+        final List<Task> children = new ArrayList<>( unvisitedCities.size() );
+        for ( Integer city : unvisitedCities )
+        {
+            TaskEuclideanTsp child = new TaskEuclideanTsp( this, city, ( ( SharedTour ) shared() ).cost() );
+            if ( ! child.pruneMe )
+            {
+                children.add( child );
+            }
+//            else // update prune statistics
+        }
+        return new ReturnDecomposition( new MinTour(), children );
+    }
+    
+    public LowerBound lowerBound() { return lowerBound; }
+     
     public double cost() { return lowerBound().cost(); }
     
     public List<Integer> tour() { return partialTour; }
