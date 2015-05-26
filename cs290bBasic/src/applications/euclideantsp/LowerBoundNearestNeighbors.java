@@ -49,11 +49,11 @@ final public class LowerBoundNearestNeighbors implements LowerBound
     
     public LowerBoundNearestNeighbors( final List<Deque<Integer>> nearestNeighbors, final double lowerBound ) 
     {
-        List<Deque<Integer>> copyNearestNeighbors = new ArrayList<>();
+        List<Deque<Integer>> copyNearestNeighbors = new ArrayList<>( CITIES.length );
         for ( int city = 0; city < nearestNeighbors.size(); city++ )
         {
             Deque<Integer> deque = new ArrayDeque<>( 2 );
-            Integer[] array = nearestNeighbors.get( city ).toArray(new Integer[0]);
+            Integer[] array = nearestNeighbors.get( city ).toArray( new Integer[ 0 ] );
             for ( int neighbor = 0; neighbor < array.length; neighbor++ )
             {
                 deque.add( array[ neighbor ] ); 
@@ -78,10 +78,10 @@ final public class LowerBoundNearestNeighbors implements LowerBound
     
     private List<Deque<Integer>> initializeNearestNeighbors()
     {
-        final List<Deque<Integer>> neighbors = new ArrayList<>();
+        final List<Deque<Integer>> neighbors = new ArrayList<>( CITIES.length );
         for ( int city = 0; city < CITIES.length; city++ )
         {
-            Deque<Integer> cityNearestNeighbors = new ArrayDeque<>();
+            Deque<Integer> cityNearestNeighbors = new ArrayDeque<>( 2 );
             cityNearestNeighbors.add( EMPTY );
             cityNearestNeighbors.add( EMPTY );
             for ( int neighbor = 0; neighbor < CITIES.length; neighbor++ )
@@ -115,10 +115,10 @@ final public class LowerBoundNearestNeighbors implements LowerBound
     public LowerBound make( TaskEuclideanTsp parentTask, Integer newCity ) 
     {
         // make a copy of nearestNeighbors: List<Deque<Integer>>
-        final List<Deque<Integer>> copyNearestNeighbors = new ArrayList<>();
+        final List<Deque<Integer>> copyNearestNeighbors = new ArrayList<>( CITIES.length );
         for ( Deque<Integer> nearestNeighbors : nearestNeighborsList )
         {
-            Deque<Integer> deque = new ArrayDeque<>();
+            Deque<Integer> deque = new ArrayDeque<>( 2 );
             Integer[] array = nearestNeighbors.toArray( new Integer[ 0 ] );
             deque.addAll( Arrays.asList( array ) );
             copyNearestNeighbors.add( deque );

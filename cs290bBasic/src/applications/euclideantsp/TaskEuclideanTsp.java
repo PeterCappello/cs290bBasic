@@ -60,7 +60,7 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
 	{ 3, 6 },
 	{ 4, 4 },
 	{ 5, 4 },
-	{ 5, 5 },
+//	{ 5, 5 },
 	{ 4, 5 }
     };
     static final private String FRAME_TITLE = "Euclidean TSP";
