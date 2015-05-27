@@ -77,12 +77,11 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
     static private final Integer ONE = 1;
     static private final Integer TWO = 2;
     static private final Integer MAX_UNVISITED_CITIES = 13;
-    
-    private List<Integer> partialTour;
-    private List<Integer> unvisitedCities;
-    private LowerBound lowerBound;
-    private boolean partialTourContains1;
-    private boolean pruneMe;
+           private List<Integer> partialTour;
+           private List<Integer> unvisitedCities;
+           private LowerBound lowerBound;
+           private boolean partialTourContains1;
+           private boolean pruneMe;
             
     public TaskEuclideanTsp()
     {
