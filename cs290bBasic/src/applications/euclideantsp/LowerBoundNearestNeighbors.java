@@ -108,11 +108,9 @@ final public class LowerBoundNearestNeighbors implements LowerBound
         return neighbors;
     }
 
-    @Override
-    public double cost() { return lowerBound; }
+    @Override public double cost() { return lowerBound; }
     
-    @Override
-    public LowerBound make( TaskEuclideanTsp parentTask, Integer newCity ) 
+    @Override public LowerBound make( TaskEuclideanTsp parentTask, Integer newCity ) 
     {
         // make a copy of nearestNeighbors: List<Deque<Integer>>
         final List<Deque<Integer>> copyNearestNeighbors = new ArrayList<>( CITIES.length );

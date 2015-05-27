@@ -122,8 +122,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
         readyTaskQ.add( rootTask );
     }
     
-    @Override
-    synchronized public void putAll( final List<Task> taskList ) { readyTaskQ.addAll( taskList ); }
+    @Override synchronized public void putAll( final List<? extends Task> taskList ) { readyTaskQ.addAll( taskList ); }
 
     /**
      * Take a Return from the Return queue.
@@ -206,7 +205,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
         readyTaskQ.add( task ); 
     }
     
-    public void putReadyTasks( final List<Task> tasks ) { readyTaskQ.addAll( tasks ); }
+    public void putReadyTasks( final List<? extends Task> tasks ) { readyTaskQ.addAll( tasks ); }
     
     public void removeWaitingTask( final UUID composeId ) { waitingTaskMap.remove( composeId ); }
     
