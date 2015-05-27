@@ -113,6 +113,7 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
         partialTour.add( newCity );
         unvisitedCities = new ArrayList<>( parentTask.unvisitedCities ); 
         unvisitedCities.remove( newCity );
+//        partialTourContains1 |= newCity.equals( ONE );
         if ( newCity.equals( ONE ) )
         {
             partialTourContains1 = true;
