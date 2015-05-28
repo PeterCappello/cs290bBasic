@@ -60,7 +60,7 @@ public interface Space extends Remote
      * @return the task's execute method return value.
      * @throws RemoteException
      */
-    ReturnValue compute( Task task, Shared shared ) throws RemoteException;
+    ReturnValue compute( Task task, Shared shared, RemoteEventConsumer remoteEventConsumer ) throws RemoteException;
     
     /**
      *

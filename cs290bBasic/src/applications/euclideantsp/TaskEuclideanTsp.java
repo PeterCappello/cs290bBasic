@@ -24,15 +24,19 @@
 package applications.euclideantsp;
 
 import api.JobRunner;
+import api.RemoteEventConsumer;
 import api.ReturnDecomposition;
 import api.ReturnValue;
 import api.Shared;
 import system.Task;
 import api.TaskRecursive;
+import java.rmi.RemoteException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.EuclideanGraph;
 import static util.EuclideanGraph.tourDistance;
 
@@ -71,12 +75,12 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
     
     public static void main( final String[] args ) throws Exception
     {
-        new JobRunner( FRAME_TITLE, args ).run( TASK, SHARED );
+        new JobRunner( FRAME_TITLE, args ).run( TASK, SHARED, new TourListener() );
     }
     
     static private final Integer ONE = 1;
     static private final Integer TWO = 2;
-    static private final Integer MAX_UNVISITED_CITIES = 13;
+    static private final Integer MAX_UNVISITED_CITIES = 12;
            private List<Integer> partialTour;
            private List<Integer> unvisitedCities;
            private LowerBound lowerBound;

@@ -23,6 +23,7 @@
  */
 package system;
 
+import api.RemoteEventConsumer;
 import api.ReturnValue;
 import api.Shared;
 import api.Space;
@@ -60,6 +61,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     final private AtomicInteger numTasks = new AtomicInteger();
     final private ComputerImpl computerInternal;
     final private Boolean sharedLock = true;
+          private RemoteEventConsumer remoteEventConsumer;
           private UUID rootTaskReturnValue;
           private Shared shared;
           private long t1   = 0;
@@ -99,9 +101,9 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
      * @param shared
      * @return
      */
-    @Override
-    public ReturnValue compute( Task rootTask, Shared shared )
+    @Override public ReturnValue compute( Task rootTask, Shared shared, RemoteEventConsumer remoteEventConsumer )
     {
+        this.remoteEventConsumer = remoteEventConsumer;
         initTimeMeasures();
         this.shared = shared;
         execute( rootTask );

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 peter.
+ * Copyright 2015 Peter Cappello.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package api;
+package applications.euclideantsp;
 
-import applications.euclideantsp.Tour;
-import java.rmi.Remote;
+import api.RemoteEventConsumer;
 import java.rmi.RemoteException;
 
 /**
  *
  * @author Peter Cappello
  */
-public interface Listener extends Remote 
+public class TourListener implements RemoteEventConsumer<Tour>
 {
-    void processEvent( Tour tour ) throws RemoteException;
+    /**
+     *
+     * @param tour
+     * @throws RemoteException
+     */
+    @Override public void accept( Tour tour ) throws RemoteException 
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
