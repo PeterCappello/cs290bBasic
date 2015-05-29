@@ -29,8 +29,8 @@ import static applications.euclideantsp.ReturnValueTour.NUM_PIXELS;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
@@ -40,6 +40,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -64,16 +65,22 @@ public class TourListener extends JFrame
     static private final JTextField costTextField = new JTextField();
     static private final JButton prevButton = new JButton();
     static private final JButton nextButton = new JButton();
+    static private int currentIndex;
+    
+    final Container container = getContentPane();
     
     TourListener()
     {
-        controlPanel.setLayout( new FlowLayout() );
+        controlPanel.setLayout( new GridLayout() );
         controlPanel.add( prevButton );
         controlPanel.add( costLabel );
         controlPanel.add( costTextField );
         controlPanel.add( nextButton );
         setTitle( title );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        
+        nextButton.addActionListener( actionEvent -> nextButtonActionPerformed( actionEvent ) );
+        prevButton.addActionListener( actionEvent -> prevButtonActionPerformed( actionEvent ) );
     }
     /**
      *
@@ -84,11 +91,12 @@ public class TourListener extends JFrame
     {
         tours.add( sharedTour );
         eventQ.add( sharedTour );
+        currentIndex = tours.size() - 1;
+        System.out.println("accept currentIndex " + currentIndex);
     }
     
     @Override public void run()
     {
-        final Container container = getContentPane();
         container.setLayout( new BorderLayout() );
         container.add( controlPanel, BorderLayout.SOUTH );
         while ( true )
@@ -175,5 +183,55 @@ public class TourListener extends JFrame
         }
         final ImageIcon imageIcon = new ImageIcon( image );
         return new JLabel( imageIcon );
+    }
+    
+    private void nextButtonActionPerformed( ActionEvent actionEvent )
+    {
+        System.out.println("nextButtonActionPerformed currentIndex " + currentIndex );
+        if ( currentIndex == tours.size() - 1 )
+        {
+            nextButton.setEnabled( false );
+        }
+        else
+        {
+            currentIndex++;
+            if ( currentIndex == tours.size() - 1 )
+            {
+                nextButton.setEnabled( false );
+            }
+            prevButton.setEnabled( true );
+            SharedTour sharedTour = tours.get( currentIndex );
+            costTextField.setText( new Double( sharedTour.cost() ).toString() );
+            JLabel jLabel = view( sharedTour );
+            tourLabels.add( tourLabels.size(), jLabel );
+            container.add( new JScrollPane( jLabel ), BorderLayout.CENTER );
+            pack();
+            setVisible( true );
+        }
+    }
+    
+    private void prevButtonActionPerformed( ActionEvent actionEvent )
+    {
+        System.out.println("prevButtonActionPerformed currentIndex " + currentIndex );
+        if ( currentIndex == 0 )
+        {
+            prevButton.setEnabled( false );
+        }
+        else
+        {
+            currentIndex--;
+            if ( currentIndex == 0 )
+            {
+                prevButton.setEnabled( false );
+            }
+            nextButton.setEnabled( true );
+            SharedTour sharedTour = tours.get( currentIndex );
+            costTextField.setText( new Double( sharedTour.cost() ).toString() );
+            JLabel jLabel = view( sharedTour );
+            tourLabels.add( tourLabels.size(), jLabel );
+            container.add( new JScrollPane( jLabel ), BorderLayout.CENTER );
+            pack();
+            setVisible( true );
+        }
     }
 }
