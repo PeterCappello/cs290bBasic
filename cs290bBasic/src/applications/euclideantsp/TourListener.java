@@ -23,22 +23,22 @@
  */
 package applications.euclideantsp;
 
-import api.RemoteEventConsumer;
+import api.RemoteEventListener;
 import java.rmi.RemoteException;
 
 /**
  *
  * @author Peter Cappello
  */
-public class TourListener implements RemoteEventConsumer<Tour>
+public class TourListener implements RemoteEventListener<SharedTour>
 {
     /**
      *
      * @param tour
      * @throws RemoteException
      */
-    @Override public void accept( Tour tour ) throws RemoteException 
+    @Override public void accept( SharedTour tour ) throws RemoteException 
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println("TourListener: cost: " + tour.cost() + " tour: " + tour.tour() );
     }
 }

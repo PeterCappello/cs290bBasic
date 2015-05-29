@@ -24,19 +24,15 @@
 package applications.euclideantsp;
 
 import api.JobRunner;
-import api.RemoteEventConsumer;
 import api.ReturnDecomposition;
 import api.ReturnValue;
 import api.Shared;
 import system.Task;
 import api.TaskRecursive;
-import java.rmi.RemoteException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.EuclideanGraph;
 import static util.EuclideanGraph.tourDistance;
 
@@ -64,7 +60,7 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
 	{ 3, 6 },
 	{ 4, 4 },
 	{ 5, 4 },
-//	{ 5, 5 },
+	{ 5, 5 },
 	{ 4, 5 }
     };
     static final private String FRAME_TITLE = "Euclidean TSP";

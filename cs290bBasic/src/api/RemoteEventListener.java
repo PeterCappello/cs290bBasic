@@ -30,7 +30,7 @@ import java.rmi.RemoteException;
  *
  * @author Peter Cappello
  */
-public interface RemoteEventConsumer<T> extends Remote
+public interface RemoteEventListener<T> extends Remote
 {
     void accept( T t ) throws RemoteException;
 }

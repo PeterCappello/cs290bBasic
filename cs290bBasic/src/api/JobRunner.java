@@ -111,7 +111,7 @@ public class JobRunner<T> extends JFrame
      * @throws RemoteException occurs if there is a communication problem or
      * the remote service is not responding
      */
-    public void run( final Task task, Shared shared, RemoteEventConsumer remoteEventConsumer ) throws RemoteException
+    public void run( final Task task, Shared shared, RemoteEventListener remoteEventConsumer ) throws RemoteException
     {
         view( space.compute( task, shared, remoteEventConsumer ).view() );
         Logger.getLogger( this.getClass().getCanonicalName() )

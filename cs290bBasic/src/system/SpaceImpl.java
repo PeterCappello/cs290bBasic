@@ -23,11 +23,12 @@
  */
 package system;
 
-import api.RemoteEventConsumer;
+import api.RemoteEventListener;
 import api.ReturnValue;
 import api.Shared;
 import api.Space;
 import api.TaskCompose;
+import applications.euclideantsp.SharedTour;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -56,12 +57,12 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     final private AtomicInteger taskIds = new AtomicInteger();
     final private BlockingQueue<Task>     readyTaskQ = new LinkedBlockingQueue<>();
     final private BlockingQueue<ReturnValue> resultQ = new LinkedBlockingQueue<>();
+    final private BlockingQueue<SharedTour>   eventQ = new LinkedBlockingQueue<>();
     final private Map<Computer, ComputerProxy> computerProxies = Collections.synchronizedMap( new HashMap<>() );
     final private Map<UUID, TaskCompose>        waitingTaskMap = Collections.synchronizedMap( new HashMap<>() );
     final private AtomicInteger numTasks = new AtomicInteger();
     final private ComputerImpl computerInternal;
     final private Boolean sharedLock = true;
-          private RemoteEventConsumer remoteEventConsumer;
           private UUID rootTaskReturnValue;
           private Shared shared;
           private long t1   = 0;
@@ -101,9 +102,10 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
      * @param shared
      * @return
      */
-    @Override public ReturnValue compute( Task rootTask, Shared shared, RemoteEventConsumer remoteEventConsumer )
+    @Override public ReturnValue compute( Task rootTask, Shared shared, RemoteEventListener remoteEventConsumer )
     {
-        this.remoteEventConsumer = remoteEventConsumer;
+        ListenerProxy listenerProxy = new ListenerProxy( remoteEventConsumer );
+        listenerProxy.start();
         initTimeMeasures();
         this.shared = shared;
         execute( rootTask );
@@ -184,9 +186,21 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     private Shared newerShared( final Shared that )
     {
+//        synchronized ( sharedLock )
+//        {
+//            return this.shared.isOlderThan( that ) ? that : this.shared;
+//        }
         synchronized ( sharedLock )
         {
-            return this.shared.isOlderThan( that ) ? that : this.shared;
+            if ( this.shared.isOlderThan( that ) )
+            {
+                eventQ.add( (SharedTour) that );
+                return that;
+            }
+            else
+            {
+                return this.shared;
+            }
         }
     }
     
@@ -300,6 +314,28 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
                     }
                 }
             }   
+        }
+    }
+    
+    private class ListenerProxy extends Thread
+    {
+        private final RemoteEventListener remoteListener;
+        
+        private ListenerProxy(final RemoteEventListener remoteListener )
+        {
+            this.remoteListener = remoteListener;
+        }
+        
+        @Override public void run()
+        {
+            while ( true )
+            {
+                try   { remoteListener.accept( eventQ.take() ); } 
+                catch ( InterruptedException | RemoteException ignore ) 
+                {
+                    
+                }
+            }
         }
     }
 }
