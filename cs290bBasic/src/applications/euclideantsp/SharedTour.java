@@ -52,4 +52,6 @@ final public class SharedTour extends Shared<SharedTour>
     public List<Integer> tour() { return tour; }
     
     public double cost() { return cost; }
+    
+    @Override public String toString() { return "\n\tCost: " + cost + "\n\tTour: " + tour; }
 }

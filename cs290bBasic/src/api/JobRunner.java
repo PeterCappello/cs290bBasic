@@ -23,7 +23,6 @@
  */
 package api;
 
-import applications.euclideantsp.Tour;
 import system.Task;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -107,13 +106,15 @@ public class JobRunner<T> extends JFrame
      * to the original problem, and display the solution.
      * @param task the task that defines the job.
      * @param shared
-     * @param remoteEventConsumer
+     * @param remoteEventListener
      * @throws RemoteException occurs if there is a communication problem or
      * the remote service is not responding
      */
-    public void run( final Task task, Shared shared, RemoteEventListener remoteEventConsumer ) throws RemoteException
+    public void run( final Task task, Shared shared, RemoteEventListener remoteEventListener ) throws RemoteException
     {
-        view( space.compute( task, shared, remoteEventConsumer ).view() );
+        Thread thread = new Thread( ( Runnable )remoteEventListener );
+        thread.start();
+        view( space.compute( task, shared, remoteEventListener ).view() );
         Logger.getLogger( this.getClass().getCanonicalName() )
               .log( Level.INFO, "Job run time: {0} ms.", ( System.nanoTime() - startTime ) / 1000000 );
     }
@@ -125,10 +126,5 @@ public class JobRunner<T> extends JFrame
         container.add( new JScrollPane( jLabel ), BorderLayout.CENTER );
         pack();
         setVisible( true );
-    }
-    
-    private void handleEvent( Tour tour )
-    {
-        
     }
 }

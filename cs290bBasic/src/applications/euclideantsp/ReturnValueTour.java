@@ -42,7 +42,7 @@ import system.Task;
  */
 public class ReturnValueTour extends ReturnValue<Tour>
 {
-    static final private int NUM_PIXELS = 600;
+    static final public int NUM_PIXELS = 600;
     
     ReturnValueTour( final Task task, final Tour tour ) { super( task, tour ); }
     
@@ -51,7 +51,7 @@ public class ReturnValueTour extends ReturnValue<Tour>
     {
         List<Integer> cityList = value().tour();
         Logger.getLogger( getClass().getCanonicalName() )
-              .log( Level.INFO, "Tour: {0}", value().toString() );
+              .log( Level.INFO, "\n\tTour: {0}", value().toString() );
         Integer[] tour = cityList.toArray( new Integer[0] );
 
         // display the graph graphically, as it were
