@@ -29,6 +29,7 @@ import static applications.euclideantsp.ReturnValueTour.NUM_PIXELS;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -40,9 +41,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -55,9 +59,19 @@ public class TourListener extends JFrame
     static private final List<JLabel> tourLabels = new ArrayList<>();
     static private final BlockingQueue<SharedTour> eventQ = new LinkedBlockingQueue<>();
     static private final String title = "Sequence of tour discoveries";
+    static private final JPanel controlPanel = new JPanel();
+    static private final JLabel costLabel = new JLabel( "Cost: " );
+    static private final JTextField costTextField = new JTextField();
+    static private final JButton prevButton = new JButton();
+    static private final JButton nextButton = new JButton();
     
     TourListener()
     {
+        controlPanel.setLayout( new FlowLayout() );
+        controlPanel.add( prevButton );
+        controlPanel.add( costLabel );
+        controlPanel.add( costTextField );
+        controlPanel.add( nextButton );
         setTitle( title );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
     }
@@ -76,13 +90,15 @@ public class TourListener extends JFrame
     {
         final Container container = getContentPane();
         container.setLayout( new BorderLayout() );
+        container.add( controlPanel, BorderLayout.SOUTH );
         while ( true )
         {
             SharedTour sharedTour = null;
             try { sharedTour = eventQ.take(); } 
             catch (InterruptedException ex) {}
+            costTextField.setText( new Double( sharedTour.cost() ).toString() );
             JLabel jLabel = view( sharedTour );
-            tourLabels.add( jLabel );
+            tourLabels.add( tourLabels.size(), jLabel );
             container.add( new JScrollPane( jLabel ), BorderLayout.CENTER );
             pack();
             setVisible( true );
