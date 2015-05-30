@@ -106,8 +106,9 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     {
         ListenerProxy listenerProxy = new ListenerProxy( remoteEventConsumer );
         listenerProxy.start();
-        initTimeMeasures();
         this.shared = shared;
+        eventQ.add( (SharedTour) shared );
+        initTimeMeasures();
         execute( rootTask );
         ReturnValue result = take();
         reportTimeMeasures( result );

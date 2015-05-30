@@ -53,8 +53,9 @@ import javax.swing.JTextField;
  *
  * @author Peter Cappello
  */
-public class TourListener extends JFrame 
-                          implements RemoteEventListener<SharedTour>, Runnable
+public class TourListener extends    JFrame 
+                          implements RemoteEventListener<SharedTour>, 
+                                     Runnable
 {
     static private final List<SharedTour> tours = new ArrayList<>();
     static private final List<JLabel> tourLabels = new ArrayList<>();
@@ -92,7 +93,6 @@ public class TourListener extends JFrame
         tours.add( sharedTour );
         eventQ.add( sharedTour );
         currentIndex = tours.size() - 1;
-        System.out.println("accept currentIndex " + currentIndex);
     }
     
     @Override public void run()
@@ -180,6 +180,7 @@ public class TourListener extends JFrame
             graphics.fillOval( x - VERTEX_DIAMETER/2,
                                y - VERTEX_DIAMETER/2,
                               VERTEX_DIAMETER, VERTEX_DIAMETER);
+            graphics.drawString( new Integer( i ).toString(), x - 1, y - 1);
         }
         final ImageIcon imageIcon = new ImageIcon( image );
         return new JLabel( imageIcon );
@@ -187,12 +188,7 @@ public class TourListener extends JFrame
     
     private void nextButtonActionPerformed( ActionEvent actionEvent )
     {
-        System.out.println("nextButtonActionPerformed currentIndex " + currentIndex );
-        if ( currentIndex == tours.size() - 1 )
-        {
-            nextButton.setEnabled( false );
-        }
-        else
+        if ( currentIndex < tours.size() - 1 )
         {
             currentIndex++;
             if ( currentIndex == tours.size() - 1 )
@@ -200,11 +196,8 @@ public class TourListener extends JFrame
                 nextButton.setEnabled( false );
             }
             prevButton.setEnabled( true );
-            SharedTour sharedTour = tours.get( currentIndex );
-            costTextField.setText( new Double( sharedTour.cost() ).toString() );
-            JLabel jLabel = view( sharedTour );
-            tourLabels.add( tourLabels.size(), jLabel );
-            container.add( new JScrollPane( jLabel ), BorderLayout.CENTER );
+            costTextField.setText( new Double( tours.get( currentIndex ).cost() ).toString() );
+            container.add( new JScrollPane( tourLabels.get( currentIndex ) ), BorderLayout.CENTER );
             pack();
             setVisible( true );
         }
@@ -212,12 +205,7 @@ public class TourListener extends JFrame
     
     private void prevButtonActionPerformed( ActionEvent actionEvent )
     {
-        System.out.println("prevButtonActionPerformed currentIndex " + currentIndex );
-        if ( currentIndex == 0 )
-        {
-            prevButton.setEnabled( false );
-        }
-        else
+        if ( currentIndex > 0 )
         {
             currentIndex--;
             if ( currentIndex == 0 )
@@ -225,11 +213,8 @@ public class TourListener extends JFrame
                 prevButton.setEnabled( false );
             }
             nextButton.setEnabled( true );
-            SharedTour sharedTour = tours.get( currentIndex );
-            costTextField.setText( new Double( sharedTour.cost() ).toString() );
-            JLabel jLabel = view( sharedTour );
-            tourLabels.add( tourLabels.size(), jLabel );
-            container.add( new JScrollPane( jLabel ), BorderLayout.CENTER );
+            costTextField.setText( new Double( tours.get( currentIndex ).cost() ).toString() );
+            container.add( new JScrollPane( tourLabels.get( currentIndex ) ), BorderLayout.CENTER );
             pack();
             setVisible( true );
         }
