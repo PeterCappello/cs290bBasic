@@ -82,6 +82,9 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
            private LowerBound lowerBound;
            private boolean partialTourContains1;
            private boolean pruneMe;
+           private int numNodes;
+           private int numPrunedNodes;
+           private int totalPruneHeights;
             
     public TaskEuclideanTsp()
     {
@@ -92,8 +95,8 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
         {
             unvisitedCities.add( city );
         }
-//        lowerBound = new LowerBoundNearestNeighbors();
-        lowerBound = new LowerBoundPartialTour( partialTour );
+        lowerBound = new LowerBoundNearestNeighbors();
+//        lowerBound = new LowerBoundPartialTour( partialTour );
     }
     
     TaskEuclideanTsp( TaskEuclideanTsp parentTask, Integer newCity, double upperBound )
@@ -153,7 +156,7 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
             }  
         } 
         shared( new SharedTour( shortestTour, shortestTourCost ) );
-        return new ReturnValueTour( this, new Tour( shortestTour, shortestTourCost ) );
+        return new ReturnValueTour( this, new Tour( shortestTour, shortestTourCost, numNodes, numPrunedNodes, totalPruneHeights ) );
     }
      
      @Override public ReturnDecomposition divideAndConquer() 
@@ -171,12 +174,17 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
         final List<TaskEuclideanTsp> children = new ArrayList<>( unvisitedCities.size() );
         for ( Integer city : unvisitedCities )
         {
+            numNodes =+ unvisitedCities.size();
             TaskEuclideanTsp child = new TaskEuclideanTsp( this, city, upperBound );
             if ( ! child.pruneMe )
             {
                     children.add( child );
             }
-//            else // update prune statistics
+            else // update prune statistics
+            {
+                numPrunedNodes++;
+                totalPruneHeights += partialTour.size();
+            }
         }
         return children;
     }

@@ -34,21 +34,32 @@ public class Tour implements Comparable<Tour>, Serializable
 {
     final private List<Integer> tour;
     final private double cost;
+    final private int numNodes;
+    final private int numPrunedNodes;
+    final private int totalPruneHeights;
     
     /**
      * Return container for TaskEuclideanTsp.
      * @param tour
      * @param cost
+     * @param numNodes
+     * @param numPrunedNodes
+     * @param totalPruneHeights
      */
-    public Tour( List<Integer> tour, double cost ) 
+    public Tour( List<Integer> tour, double cost, int numNodes, int numPrunedNodes, int totalPruneHeights )
     {
         this.tour = tour;
         this.cost = cost;
+        this.numNodes = numNodes;
+        this.numPrunedNodes = numPrunedNodes;
+        this.totalPruneHeights = totalPruneHeights;
     } 
  
-    public List<Integer> tour() { return tour; }
-    
     public double cost() { return cost; }
+    public List<Integer> tour() { return tour; }
+    public int numNodes() { return numNodes; }
+    public int numPrunedNodes() { return numPrunedNodes; }
+    public int totalPruneHeights() { return totalPruneHeights; }
 
     @Override
     public int compareTo( Tour tour )

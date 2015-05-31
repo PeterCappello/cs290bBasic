@@ -43,15 +43,21 @@ import system.Task;
 public class ReturnValueTour extends ReturnValue<Tour>
 {
     static final public int NUM_PIXELS = 600;
-    
+        
     ReturnValueTour( final Task task, final Tour tour ) { super( task, tour ); }
     
-    @Override
-    public JLabel view() 
+    @Override public JLabel view() 
     {
         List<Integer> cityList = value().tour();
         Logger.getLogger( getClass().getCanonicalName() )
               .log( Level.INFO, "\n\tTour: {0}", value().toString() );
+        Logger.getLogger( getClass().getCanonicalName() )
+              .log( Level.INFO, 
+                 "\n\tNumber of nodes: " + value().numNodes()
+              + "\n\tNumber of pruned nodes: " + value().numPrunedNodes() 
+              + "\n\tTotal prune heights: " + value().totalPruneHeights() 
+              + "\n\tAverage prune height: " + ( value().totalPruneHeights() / (float)value().numPrunedNodes() ) 
+              + "\n\tAverage prune height / tour length: " + ( ( value().totalPruneHeights() / (float)value().numPrunedNodes() ) / CITIES.length ) );
         Integer[] tour = cityList.toArray( new Integer[0] );
 
         // display the graph graphically, as it were

@@ -36,13 +36,21 @@ public class MinTour extends TaskCompose<Tour>
     public ReturnValue call() 
     {
         Tour shortestTour = args().remove( 0 );
+        int numNodes = shortestTour.numNodes();
+        int numPrunedNodes = shortestTour.numPrunedNodes();
+        int totalPruneHeights = shortestTour.totalPruneHeights();
         for ( Tour tour : args() ) 
         {
             if ( tour.compareTo( shortestTour ) < 0 )
             {
                 shortestTour = tour;
             }
+            numNodes += tour.numNodes();
+            numPrunedNodes += tour.numPrunedNodes();
+            totalPruneHeights += tour.totalPruneHeights();
         }
-        return new ReturnValueTour( this, shortestTour );
+        Tour minTour = new Tour( shortestTour.tour(), shortestTour.cost(),
+        numNodes, numPrunedNodes, totalPruneHeights );
+        return new ReturnValueTour( this, minTour );
     }
 }
