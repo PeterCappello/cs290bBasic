@@ -48,6 +48,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -62,10 +63,10 @@ public class TourListener extends    JFrame
     static private final BlockingQueue<SharedTour> eventQ = new LinkedBlockingQueue<>();
     static private final String title = "Sequence of tour discoveries";
     static private final JPanel controlPanel = new JPanel();
-    static private final JLabel costLabel = new JLabel( "Cost: " );
+    static private final JLabel costLabel = new JLabel( "Cost: ", SwingConstants.RIGHT );
     static private final JTextField costTextField = new JTextField();
-    static private final JButton prevButton = new JButton();
-    static private final JButton nextButton = new JButton();
+    static private final JButton prevButton = new JButton( "Previous" );
+    static private final JButton nextButton = new JButton( "Next" );
     static private int currentIndex;
     
     final Container container = getContentPane();
@@ -82,6 +83,21 @@ public class TourListener extends    JFrame
         
         nextButton.addActionListener( actionEvent -> nextButtonActionPerformed( actionEvent ) );
         prevButton.addActionListener( actionEvent -> prevButtonActionPerformed( actionEvent ) );
+        
+//        try 
+//        {
+//            File imageCheck = new File( "resources/next.gif" );
+//
+//            if( imageCheck.exists() ) 
+//                System.out.println( "Image file found!" );
+//            else 
+//                System.out.println( "Image file not found!" );
+//
+//            ImageIcon water = new ImageIcon( "next.gif" );
+//            Image image = ImageIO.read( getClass().getResource("resources/next.gif"));
+//            nextButton.setIcon( new ImageIcon( image ) );
+//        } 
+//        catch ( IOException ex ) { ex.printStackTrace(); }
     }
     /**
      *
