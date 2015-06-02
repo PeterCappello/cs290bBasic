@@ -29,8 +29,8 @@ import static applications.euclideantsp.ReturnValueTour.NUM_PIXELS;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
@@ -76,7 +76,7 @@ public final class TourListener extends    JFrame
     
     TourListener()
     {
-        controlPanel.setLayout( new GridLayout() );
+        controlPanel.setLayout( new FlowLayout() );
         controlPanel.add( firstButton );
         controlPanel.add( prevButton );
         controlPanel.add( costLabel );
