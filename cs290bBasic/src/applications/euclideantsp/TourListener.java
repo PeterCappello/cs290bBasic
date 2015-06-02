@@ -41,6 +41,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -54,19 +55,21 @@ import javax.swing.SwingConstants;
  *
  * @author Peter Cappello
  */
-public class TourListener extends    JFrame 
+public final class TourListener extends    JFrame 
                           implements RemoteEventListener<SharedTour>, 
                                      Runnable
 {
-    static private final List<SharedTour> tours = new ArrayList<>();
-    static private final List<JLabel> tourLabels = new ArrayList<>();
+    static private final List<SharedTour> tours = Collections.synchronizedList( new ArrayList<>() );
+    static private final List<JLabel> tourLabels = Collections.synchronizedList( new ArrayList<>() );
     static private final BlockingQueue<SharedTour> eventQ = new LinkedBlockingQueue<>();
     static private final String title = "Sequence of tour discoveries";
     static private final JPanel controlPanel = new JPanel();
     static private final JLabel costLabel = new JLabel( "Cost: ", SwingConstants.RIGHT );
     static private final JTextField costTextField = new JTextField();
-    static private final JButton prevButton = new JButton( "Previous" );
-    static private final JButton nextButton = new JButton( "Next" );
+    static private final JButton firstButton = new JButton( "First" );
+    static private final JButton prevButton  = new JButton( "Previous" );
+    static private final JButton nextButton  = new JButton( "Next" );
+    static private final JButton lastButton  = new JButton( "Last" );
     static private int currentIndex;
     
     final Container container = getContentPane();
@@ -74,15 +77,21 @@ public class TourListener extends    JFrame
     TourListener()
     {
         controlPanel.setLayout( new GridLayout() );
+        controlPanel.add( firstButton );
         controlPanel.add( prevButton );
         controlPanel.add( costLabel );
         controlPanel.add( costTextField );
         controlPanel.add( nextButton );
+        controlPanel.add( lastButton );
         setTitle( title );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         
-        nextButton.addActionListener( actionEvent -> nextButtonActionPerformed( actionEvent ) );
-        prevButton.addActionListener( actionEvent -> prevButtonActionPerformed( actionEvent ) );
+        firstButton.addActionListener( actionEvent -> firstButtonActionPerformed( actionEvent ) );
+        lastButton.addActionListener( actionEvent  -> lastButtonActionPerformed( actionEvent ) );
+        prevButton.addActionListener( actionEvent  -> prevButtonActionPerformed( actionEvent ) );
+        nextButton.addActionListener( actionEvent  -> nextButtonActionPerformed( actionEvent ) );
+        
+        
         
 //        try 
 //        {
@@ -202,21 +211,15 @@ public class TourListener extends    JFrame
         return new JLabel( imageIcon );
     }
     
-    private void nextButtonActionPerformed( ActionEvent actionEvent )
+    private void firstButtonActionPerformed( ActionEvent actionEvent )
     {
-        if ( currentIndex < tours.size() - 1 )
-        {
-            currentIndex++;
-            if ( currentIndex == tours.size() - 1 )
-            {
-                nextButton.setEnabled( false );
-            }
-            prevButton.setEnabled( true );
-            costTextField.setText( new Double( tours.get( currentIndex ).cost() ).toString() );
-            container.add( new JScrollPane( tourLabels.get( currentIndex ) ), BorderLayout.CENTER );
-            pack();
-            setVisible( true );
-        }
+        currentIndex = 0;
+        prevButton.setEnabled( false );
+        nextButton.setEnabled( true );
+        costTextField.setText( new Double( tours.get( 0 ).cost() ).toString() );
+        container.add( new JScrollPane( tourLabels.get( 0 ) ), BorderLayout.CENTER );
+        pack();
+        setVisible( true );
     }
     
     private void prevButtonActionPerformed( ActionEvent actionEvent )
@@ -234,5 +237,33 @@ public class TourListener extends    JFrame
             pack();
             setVisible( true );
         }
+    }
+    
+    private void nextButtonActionPerformed( ActionEvent actionEvent )
+    {
+        if ( currentIndex < tours.size() - 1 )
+        {
+            currentIndex++;
+            if ( currentIndex == tours.size() - 1 )
+            {
+                nextButton.setEnabled( false );
+            }
+            prevButton.setEnabled( true );
+            costTextField.setText( new Double( tours.get( currentIndex ).cost() ).toString() );
+            container.add( new JScrollPane( tourLabels.get( currentIndex ) ), BorderLayout.CENTER );
+            pack();
+            setVisible( true );
+        }
+    }
+    
+    private void lastButtonActionPerformed( ActionEvent actionEvent )
+    {
+        currentIndex = tours.size() - 1;
+        prevButton.setEnabled( true );
+        nextButton.setEnabled( false );
+        costTextField.setText( new Double( tours.get( currentIndex ).cost() ).toString() );
+        container.add( new JScrollPane( tourLabels.get( currentIndex ) ), BorderLayout.CENTER );
+        pack();
+        setVisible( true );
     }
 }
