@@ -95,8 +95,8 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
         {
             unvisitedCities.add( city );
         }
-        lowerBound = new LowerBoundNearestNeighbors();
-//        lowerBound = new LowerBoundPartialTour( partialTour );
+//        lowerBound = new LowerBoundNearestNeighbors();
+        lowerBound = new LowerBoundPartialTour( partialTour );
     }
     
     TaskEuclideanTsp( TaskEuclideanTsp parentTask, Integer newCity, double upperBound )
