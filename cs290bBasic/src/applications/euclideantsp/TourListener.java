@@ -59,7 +59,7 @@ public final class TourListener extends    JFrame
                           implements RemoteEventListener<SharedTour>, 
                                      Runnable
 {
-    static private final List<SharedTour> tours = Collections.synchronizedList( new ArrayList<>() );
+    static private final List<SharedTour>  tours = Collections.synchronizedList( new ArrayList<>() );
     static private final List<JLabel> tourLabels = Collections.synchronizedList( new ArrayList<>() );
     static private final BlockingQueue<SharedTour> eventQ = new LinkedBlockingQueue<>();
     static private final String title = "Sequence of tour discoveries";
