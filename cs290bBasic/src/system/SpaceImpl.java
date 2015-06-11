@@ -66,8 +66,8 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     final private Boolean sharedLock = true;
           private UUID rootTaskReturnValue;
           private Shared shared = new NullShared();
-          private long t1   = 0;
-          private long tInf = 0;
+          private long t1;
+          private long tInf;
     
     public SpaceImpl() throws RemoteException 
     {
@@ -101,6 +101,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
      *
      * @param rootTask
      * @param shared
+     * @param remoteEventConsumer
      * @return
      */
     @Override public ReturnValue compute( Task rootTask, Shared shared, RemoteEventListener remoteEventConsumer )
@@ -122,7 +123,6 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
      */
     private void execute( Task rootTask ) 
     { 
-//        rootTask.id( UUID.randomUUID() );
         rootTaskReturnValue = UUID.randomUUID();
         rootTask.composeId( rootTaskReturnValue );
         readyTaskQ.add( rootTask );
@@ -188,10 +188,6 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     private Shared newerShared( final Shared that )
     {
-//        synchronized ( sharedLock )
-//        {
-//            return this.shared.isOlderThan( that ) ? that : this.shared;
-//        }
         synchronized ( sharedLock )
         {
             if ( this.shared.isOlderThan( that ) )
