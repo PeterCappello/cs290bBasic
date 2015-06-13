@@ -215,5 +215,5 @@ public class TaskEuclideanTsp extends TaskRecursive<Tour>
     
     public List<Integer> unvisitedCities() { return unvisitedCities; }
    
-   private boolean isComplete() { return unvisitedCities.isEmpty(); }
+    private boolean isComplete() { return unvisitedCities.isEmpty(); }
 }
