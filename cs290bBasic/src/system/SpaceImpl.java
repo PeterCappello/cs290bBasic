@@ -65,7 +65,6 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     final private Boolean sharedLock = true;
           private UUID rootTaskReturnValue;
           private Shared shared = new NullShared();
-//          private long t1;
           private long tInf;
     
     public SpaceImpl() throws RemoteException 
@@ -224,7 +223,6 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     private void initTimeMeasures()
     {
         numTasks.getAndSet( 0 );
-//        t1 = 0;
         tInf = 0;
     }
     
