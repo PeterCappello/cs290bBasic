@@ -43,7 +43,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static system.Configuration.SPACE_CALLABLE;
 
 /**
  * SpaceImpl implements the space for coordinating sending/receiving Task and Result objects.
@@ -76,7 +75,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
               .log( Level.INFO, "Space started." );
     }
     
-    Computer computer() { return computerInternal; }
+    public Computer computer() { return computerInternal; }
     
     /**
      * Compute a Task and return its Return.
