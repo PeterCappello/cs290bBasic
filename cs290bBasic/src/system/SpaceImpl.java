@@ -79,14 +79,14 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     /**
      * Compute a Task and return its Return.
-     * To ensure that the correct Return is returned, 
-     * this must be the only computation the Space is servicing.
+     * Precondition: rootTask is the only computation the Space is servicing.
      * 
      * @param rootTask task that encapsulates the overall computation.
      * @return the Task's Return object.
      */
     @Override public ReturnValue compute( Task rootTask )
     {
+        assert readyTaskQ.isEmpty() && waitingTaskMap.isEmpty();
         initTimeMeasures();
         execute( rootTask );
         return take();
@@ -94,13 +94,15 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     /**
      *
-     * @param rootTask
+     * @param rootTask task that encapsulates the overall computation.
+     * Precondition: rootTask is the only computation the Space is servicing.
      * @param shared
      * @param remoteEventConsumer
      * @return
      */
     @Override public ReturnValue compute( Task rootTask, Shared shared, RemoteEventListener remoteEventConsumer )
     {
+        assert readyTaskQ.isEmpty() && waitingTaskMap.isEmpty();
         ListenerProxy listenerProxy = new ListenerProxy( remoteEventConsumer );
         listenerProxy.start();
         this.shared = shared;
