@@ -71,15 +71,12 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     public SpaceImpl() throws RemoteException 
     {
-        if ( SPACE_CALLABLE )
-        {
-            computerInternal = new ComputerImpl( this );
-        }
+        computerInternal = new ComputerImpl( this );
         Logger.getLogger( getClass().getName() )
               .log( Level.INFO, "Space started." );
     }
     
-    public Computer computer() { return computerInternal; }
+    Computer computer() { return computerInternal; }
     
     /**
      * Compute a Task and return its Return.
@@ -89,8 +86,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
      * @param rootTask task that encapsulates the overall computation.
      * @return the Task's Return object.
      */
-    @Override
-    public ReturnValue compute( Task rootTask )
+    @Override public ReturnValue compute( Task rootTask )
     {
         initTimeMeasures();
         execute( rootTask );
@@ -134,8 +130,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
      * Take a Return from the Return queue.
      * @return a Return object.
      */
-    @Override
-    public ReturnValue take() 
+    @Override public ReturnValue take() 
     {
         try { return resultQ.take(); } 
         catch ( InterruptedException ignore ) 
@@ -156,8 +151,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
      * @param numProcessors
      * @throws RemoteException
      */
-    @Override
-    public void register( Computer computer, int numProcessors ) throws RemoteException
+    @Override public void register( Computer computer, int numProcessors ) throws RemoteException
     {
         final ComputerProxy computerProxy = new ComputerProxy( computer, PROXIES_PER_PROCESSOR* numProcessors );
         computerProxies.put( computer, computerProxy );
@@ -210,7 +204,6 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     {
         assert waitingTaskMap.get( compose.id() ) == null : compose.id(); 
         waitingTaskMap.put( compose.id(), compose );
-        assert waitingTaskMap.get( compose.id() ) != null;
     }
     
     public void putReadyTask( final Task task ) 
@@ -231,7 +224,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     {
         numTasks.getAndSet( 0 );
 //        t1 = 0;
-//        tInf = 0;
+        tInf = 0;
     }
     
     public UUID rootTaskReturnValue() { return rootTaskReturnValue; }
@@ -288,8 +281,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
             
             private WorkerProxy( final int id ) { this.id = id; }
             
-            @Override
-            public void run()
+            @Override public void run()
             {
                 while ( true )
                 {
@@ -329,9 +321,10 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
             while ( true )
             {
                 try   { remoteListener.accept( eventQ.take() ); } 
-                catch ( InterruptedException | RemoteException ignore ) 
+                catch ( InterruptedException | RemoteException ex ) 
                 {
-                    
+                    Logger.getLogger( getClass().getName() )
+                          .log( Level.INFO, "Listener accept of event failed", ex );
                 }
             }
         }
