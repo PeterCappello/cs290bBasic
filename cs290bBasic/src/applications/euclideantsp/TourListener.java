@@ -59,10 +59,10 @@ import javax.swing.SwingConstants;
  * @author Peter Cappello
  */
 public final class TourListener extends    JFrame 
-                          implements RemoteEventListener<SharedTour>, 
-                                     Runnable
+                                implements RemoteEventListener<SharedTour>, 
+                                           Runnable
 {
-    static private final List<SharedTour> tours = Collections.synchronizedList( new ArrayList<>() );
+    static private final List<SharedTour>  tours = Collections.synchronizedList( new ArrayList<>() );
     static private final List<JLabel> tourLabels = Collections.synchronizedList( new ArrayList<>() );
     static private final BlockingQueue<SharedTour> eventQ = new LinkedBlockingQueue<>();
     static private final String title = "Sequence of tour discoveries";
@@ -160,7 +160,7 @@ public final class TourListener extends    JFrame
         final Image image = new BufferedImage( NUM_PIXELS, NUM_PIXELS, BufferedImage.TYPE_INT_ARGB );
         final Graphics graphics = image.getGraphics();
 
-        final int margin = 10;
+        final int margin = 20;
         final int field = NUM_PIXELS - 2*margin;
         // draw edges
         graphics.setColor( Color.BLUE );
@@ -192,7 +192,7 @@ public final class TourListener extends    JFrame
             graphics.fillOval( x - VERTEX_DIAMETER/2,
                                y - VERTEX_DIAMETER/2,
                               VERTEX_DIAMETER, VERTEX_DIAMETER);
-            graphics.drawString( new Integer( i ).toString(), x - 1, y - 1);
+            graphics.drawString( new Integer( i ).toString(), x, y - 5 );
         }
         final ImageIcon imageIcon = new ImageIcon( image );
         return new JLabel( imageIcon );
