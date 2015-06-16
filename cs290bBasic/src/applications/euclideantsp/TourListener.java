@@ -41,7 +41,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -67,8 +70,8 @@ public final class TourListener extends    JFrame
     static private final JLabel costLabel = new JLabel( "Cost: ", SwingConstants.RIGHT );
     static private final JTextField costTextField = new JTextField();
     static private final JButton firstButton = new JButton( "First" );
-    static private final JButton prevButton  = new JButton( "Previous" );
-    static private final JButton nextButton  = new JButton( "Next" );
+    static private final JButton prevButton  = new JButton( new ImageIcon( "resources/prev.gif" ) );
+    static private final JButton nextButton  = new JButton( new ImageIcon( "resources/next.gif" ) );
     static private final JButton lastButton  = new JButton( "Last" );
     static private int currentIndex;
     
@@ -90,23 +93,7 @@ public final class TourListener extends    JFrame
         lastButton.addActionListener( actionEvent  -> lastButtonActionPerformed( actionEvent ) );
         prevButton.addActionListener( actionEvent  -> prevButtonActionPerformed( actionEvent ) );
         nextButton.addActionListener( actionEvent  -> nextButtonActionPerformed( actionEvent ) );
-        
-        
-        
-//        try 
-//        {
-//            File imageCheck = new File( "resources/next.gif" );
-//
-//            if( imageCheck.exists() ) 
-//                System.out.println( "Image file found!" );
-//            else 
-//                System.out.println( "Image file not found!" );
-//
-//            ImageIcon water = new ImageIcon( "next.gif" );
-//            Image image = ImageIO.read( getClass().getResource("resources/next.gif"));
-//            nextButton.setIcon( new ImageIcon( image ) );
-//        } 
-//        catch ( IOException ex ) { ex.printStackTrace(); }
+
     }
     /**
      *
