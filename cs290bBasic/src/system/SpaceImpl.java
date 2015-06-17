@@ -208,8 +208,13 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     public void putReadyTask( final Task task ) 
     { 
-        assert waitingTaskMap.get( task.composeId() ) != null || task.composeId() == rootTaskReturnValue : task.composeId();
-        readyTaskQ.add( task ); 
+        assert waitingTaskMap.get( task.composeId() ) != null 
+            || task.composeId() == rootTaskReturnValue : task.composeId();
+        try 
+        { 
+            processResult( task, computer().execute( task, shared() ) );
+        }
+        catch ( RemoteException ignore ) { /* Not a Remote invocation. */ }  
     }
     
     public void putReadyTasks( final List<? extends Task> tasks ) { readyTaskQ.addAll( tasks ); }
